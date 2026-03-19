@@ -583,29 +583,17 @@ body::before {
       <div class="error-msg" id="err-email">有効なメールアドレスを入力してください</div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">現在の年商（概算）</label>
-        <select class="form-select" id="revenue">
-          <option value="">選択してください</option>
-          <option value="0">まだほとんどない</option>
-          <option value="1">〜300万円</option>
-          <option value="2">300〜500万円</option>
-          <option value="3">500〜1000万円</option>
-          <option value="4">1000万円以上</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">起業・独立からの年数</label>
-        <select class="form-select" id="years">
-          <option value="">選択してください</option>
-          <option value="0">準備中・1年未満</option>
-          <option value="1">1〜3年</option>
-          <option value="2">3〜5年</option>
-          <option value="3">5年以上</option>
-        </select>
-      </div>
+    <div class="form-group">
+      <label class="form-label">起業・独立からの年数</label>
+      <select class="form-select" id="years">
+        <option value="">選択してください</option>
+        <option value="0">準備中・1年未満</option>
+        <option value="1">1〜3年</option>
+        <option value="2">3〜5年</option>
+        <option value="3">5年以上</option>
+      </select>
     </div>
+
   </div>
 
   <button class="btn btn-primary" onclick="validateProfile()">
@@ -892,7 +880,6 @@ function validateProfile() {
 
   userData = {
     name, email, business,
-    revenue: document.getElementById('revenue').value,
     years: document.getElementById('years').value
   };
 
@@ -977,8 +964,6 @@ function calcScores() {
 // ===== SAVE TO SPREADSHEET =====
 async function saveToSheet(overall, axes) {
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbw_o4QowsWalqxYJk45eMg2YpEgnL9_l6TdqkjvzkLDQ14YJcODbSX5l00BvuxYSyBshA/exec';
-  const revLabels = ['まだほとんどない','〜300万円','300〜500万円','500〜1000万円','1000万円以上'];
-  const yearLabels = ['準備中・1年未満','1〜3年','3〜5年','5年以上'];
   const axesObj = {};
   axes.forEach(a => axesObj[a.name] = a.score);
   try {
@@ -990,8 +975,6 @@ async function saveToSheet(overall, axes) {
         name: userData.name,
         email: userData.email,
         business: userData.business,
-        revenue: revLabels[parseInt(userData.revenue)] || '',
-        years: yearLabels[parseInt(userData.years)] || '',
         overall,
         axes: axesObj
       })
@@ -1025,7 +1008,6 @@ async function generateResult() {
 【受診者情報】
 - 名前：${userData.name}
 - 事業内容：${userData.business}
-- 月商：${revLabels[parseInt(userData.revenue)] || '未回答'}
 - 起業年数：${yearLabels[parseInt(userData.years)] || '未回答'}
 
 【診断スコア】
@@ -1171,7 +1153,6 @@ function restartAssessment() {
   document.getElementById('name').value = '';
   document.getElementById('email').value = '';
   document.getElementById('business').value = '';
-  document.getElementById('revenue').value = '';
   document.getElementById('years').value = '';
   showScreen('screen-intro');
 }
